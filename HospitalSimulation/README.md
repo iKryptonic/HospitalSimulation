@@ -1,8 +1,8 @@
-- Person class
-	> First Name
-	> Last Name
-	> DOB	
-	> Location
+# Person class
+	- First Name
+	- Last Name
+	- DOB	
+	- Location
 	
 	- Staff extends person
 		> Title (Doctor, Nurse, CNA)
@@ -15,25 +15,24 @@
 		> Code (W or E)
 		> TimeSpentWaiting
 			
-- Room class
+# Room class
 	- Treament room extends room
-		> Distance from waiting room
+		- Distance from waiting room
 	- Waiting room extends room
-		> Occupants (HashMap/ArrayList)
+		- Occupants (HashMap/ArrayList)
 		
-- Database class
+# Database class
 	- Interfaces with CSV .txt file to store user information
 	- Database (Minus SQLite)
 	- Contains personalities and how long it takes for a certain person to do anything
 	
 	
--> Run simulation on the csv of patients & doctors
- > Output 
-	* how long each patient took to be treated
-	* who treated the patient
-	* how to patient arrived
+# Run simulation on the csv of patients & doctors
+	- how long each patient took to be treated
+	- who treated the patient
+	- how to patient arrived
 	
-> Simulating 
+# Simulating 
 	"Arrival of patient"
 	"Assessment of patient"
 	"Waiting time for patient"
