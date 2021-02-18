@@ -1,0 +1,41 @@
+I was thinking about creating a txt file with the patients and data while displaying and reading it from a buffer reader then use string tokenizer to break all strings we would create into separate arrays.
+For example:
+
+import Java.io*
+import Java.until.*
+import Java.Lang.*
+
+Public class HospitalDemo
+{
+Public static void main(String[] args) throws IOException 
+{
+FileReader file=new FeleReader(read me.txt)
+BufferReader inputFile=new BufferReader(file)
+
+Final int patients= //number of patients 
+
+--then we can do the strings
+
+String[]Data=new String[Patients];
+String[]Name=new String[Patients];
+String[]Staff=nee String[Patients]
+double[]id=new double[Patients]
+Int[]hours or time=int[Patients];
+
+for(int I=0;i <Patients;i ++)
+{
+Data[i]=inputFile.readline 
+System.out.println(Data[i])
+
+
+-----then we can do array.sort(Data)
+//that will put string tokenizers in arrays
+
+StringTokenizer strT=new StringTokenizer(Data[i],"")
+Name=strT.nextToken()
+Staff=strT.nextToken
+Id=double.parseDouble(strT.nextToken 
+Time=integer.parseint()
+
+System.out.println
+etc.....etc....
