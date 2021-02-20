@@ -1,0 +1,107 @@
+- Treament room extends room
+	- Distance from waiting room
+- Waiting room extends room
+	- Occupants (HashMap/ArrayList)
+  
+  If using Scanner
+  
+  public class Treatment extends Room
+{
+    String med_name, med_comp, exp_time;
+    int med_time, count;
+    void new_medi()
+    {
+        Scanner input = new Scanner(System.in);
+        System.out.print("name:-");
+        med_name = input.nextLine();
+        System.out.print("comp:-");
+        med_comp = input.nextLine();
+        System.out.print("exp_time:-");
+        exp_date = input.nextLine();
+        System.out.print("no of unit:-");
+        count = input.nextInt();
+    }
+    void find_medi()
+    {
+        System.out.println(med_name + "  \t" + med_comp + "    \t" + exp_date + "     \t" + med_unit);
+    }
+}
+
+
+
+///The Unit could be who had priority first compared to first part of code that we would display (code W) 0r (Code E) which could be split into two units
+
+
+-----------------------------------------------------------------------------------------
+                                      OR
+ 
+ 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+
+
+public class PATIENT
+{
+private static Map<Hospital, List<Patients>> repo = new HashMap<Hospital, List<Patients>>();
+
+/**
+ * @param args
+ */
+public static void main(String[] args)
+{
+
+    // Displaying records for Patients
+
+    createRepository();
+
+    List<patient> lst1 = getPatientsList(new listW);
+
+    for (Patient patient : lstW)
+    {
+        System.out.println(patient);
+    }
+
+    System.out.println("==================================");
+
+    // Displaying records for Hospital for Hospital 
+    List<Patient> lst2E = getPatientsList(new listE);
+
+    for (Patients patient : lst2E)
+    {
+        System.out.println(patient);
+    }
+
+}
+
+public static List<Patient> getPatientsList(Hospital hospital)
+{
+
+    return repo.get(patient);
+
+}
+
+public static void createRepository()
+{
+    Patients patient1 = new Patient(W, "", id);
+    Patients patient2 = new Patient(E, "", "", id);
+
+    List<Patient> list1 = new ArrayList<Patients>();
+    List<Patient> list2 = new ArrayList<DPatients>();
+
+    list1.add(new Patient(id, "Patient-P", "", ""));
+    list1.add(new Patient(id, "Patient-Q", "", ""));
+    list1.add(new Patient(id, "Patient-R", "", ""));
+    list1.add(new Patient(id, "Patient-S", "", ""));
+
+    list2.add(new Patient(id, "Patient-P", "", ""));
+    list2.add(new Patient(id, "Patient-Q", "", ""));
+    list2.add(new Patient(id, "Patient-R", "", ""));
+    list2.add(new Patient(id, "Patient-S", "", ""));
+
+
+    repo.put(patient1, list1);
+    repo.put(patient2, list2);
+
+    }
