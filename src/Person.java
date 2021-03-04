@@ -33,7 +33,7 @@ public class Person {
 	return this.dateOfBirth;
     }
     
-    public Room getLocation() {
+    public Room getRoom() {
 	return this.Location;
     }
     

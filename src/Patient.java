@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 /*
     > PatientID
     > Priority (1-3)
@@ -7,21 +10,30 @@
 
 public class Patient extends Person {
     
+    public static int numberOfPatients = 0;
+    
     private int PatientID;
     private char Code;
     private int Priority;
     public int TimeSpentWaiting;
+    public List<Symptom> symptoms = new ArrayList<Symptom>();
     
-    public Patient(String firstName, String lastName, String dateOfBirth, int PatientID, char Code, int Priority) {
+    public Patient(String firstName, String lastName, String dateOfBirth, char code) {
 	super(firstName, lastName, dateOfBirth);
-	this.PatientID = PatientID;
-	this.Code = Code;
-	this.Priority = Priority;
+	this.PatientID = numberOfPatients;
+	this.Code = code;
+	numberOfPatients++;
+    }
+    
+    public static Patient random(char code) {
+	return new Patient("John", "Doe", "01/01/1999", code);
     }
     
     public void changeRoom(Room newRoom) {
 	this.TimeSpentWaiting += newRoom.getDistance();
+	this.getRoom().removeOccupant(this);
 	this.setRoom(newRoom);
+	this.getRoom().newOccupant(this);
     }
     
     public void setPriority(int newPriority) {
@@ -39,5 +51,8 @@ public class Patient extends Person {
     }
     public int getTimeWaiting() {
 	return this.TimeSpentWaiting;
+    }
+    public int getPriority() {
+	return this.Priority;
     }
 }
