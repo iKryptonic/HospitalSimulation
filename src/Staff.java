@@ -95,6 +95,6 @@ public class Staff extends Person {
     
     public static Staff random(Title title, Room room) {
 	// TODO: random name and DOB generation
-	return new Staff("Isaiah", "Smith", "07/13/2000", room, title, 2+(double)(new Random().nextInt(100)/100));
+	return new Staff(Driver.namegen.generateName()[0], Driver.namegen.generateName()[1], "07/13/1995", room, title, 2+(double)(new Random().nextInt(100)/100));
     }
 }

@@ -28,7 +28,7 @@ public class Patient extends Person {
     }
     
     public static Patient random(char code) {
-	return new Patient("John", "Doe", "01/01/1999", code);
+	return new Patient(Driver.namegen.generateName()[0], Driver.namegen.generateName()[1], "01/01/1999", code);
     }
     
     public void changeRoom(Room newRoom) {

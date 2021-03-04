@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 // what are we doing?
 /*
@@ -44,6 +45,18 @@ public class Driver {
     	return patient;
     }
     
+    private static Patient handleNextPatient(Patient patient, Room room, Room waitingRoom) throws InterruptedException {
+	
+    	Staff DR = room.getStaff(0);
+    	Staff RN = room.getStaff(1);
+    	Staff CNA = room.getStaff(2);
+    		
+    	CNA.admit(patient);
+    	RN.assess(patient);
+    	DR.treat(patient);
+    	return patient;
+    }
+    
     private static void runSimulation(int PatientNumber) throws InterruptedException {
     	List<Room> rooms = new ArrayList<Room>();
     	
@@ -57,37 +70,54 @@ public class Driver {
     	}
     	// now our waiting room is filled, ready to be parsed; also: our treatment rooms are ready to recieve patients
     	
-    	do {
-        	for(Room currentRoom : rooms) {
-        	    if(currentRoom != Room.WaitingRoom && currentRoom != Room.Discharged) // we are not in the waiting room
-        		new Thread(new Runnable() { // multi-threaded
-        		    public void run() {
-				    try {
-					Patient patient = handleNextPatient(currentRoom, 
-						rooms.get(0));
-
-					Staff patientCNA = patient.workedWith[0];
-					Staff patientRN = patient.workedWith[1];
-					Staff patientDR = patient.workedWith[2];
-
-					System.out.println("\n>>>>>>>>>>>>>> BEGIN <<<<<<<<<<<<<<<");
-					System.out.printf("Patient %s %s spent %d minutes in the hospital.%n\tThey were treated by Dr. %s %s (ID: %d)%n\t\tRN %s %s (ID: %d) and CNA %s %s (ID: %d)%n%s %s was a code %s. They were treated as priority %d%n",
-						patient.getName()[0], patient.getName()[1], patient.TimeSpentWaiting, 
-						patientDR.getName()[0], patientDR.getName()[1], patientDR.IDNumber(), 
-						patientRN.getName()[0], patientRN.getName()[1], patientRN.IDNumber(),
-						patientCNA.getName()[0], patientCNA.getName()[1], patientCNA.IDNumber(),
-						patient.getName()[0], patient.getName()[1], patient.getCode(), patient.getPriority());
-					System.out.println("\tThis is because the patient "+patient.getName()[1]+" presented the following symptoms: ");
-					patient.symptoms.forEach(value -> System.out.println("\t\t"+value));
-					System.out.println(">>>>>>>>>>>>>> END <<<<<<<<<<<<<<<\n");
-				    } catch (InterruptedException e) {
-					e.printStackTrace();
-				    }
-        		    }
-        		}).start();
-        	    Thread.sleep(100);
-        	}
-    	} while (numPatients > 0);
+    	StringBuilder totalEmergency = new StringBuilder();
+            	try {
+            	do {
+                	for(Room currentRoom : rooms) {
+                	    if(currentRoom != Room.WaitingRoom && currentRoom != Room.Discharged) // we are not in the waiting room
+                		new Thread(new Runnable() { // multi-threaded
+                		    public void run() {
+        				    try {
+        					Patient patient = null;
+        					switch(new Random().nextInt(10)){
+        					case 0:
+        					   totalEmergency.append("1");
+        					   patient = handleNextPatient(Patient.random('E'), 
+        						   currentRoom, 
+        						   rooms.get(0));
+        					   break;
+        					default:
+        					   patient = handleNextPatient(currentRoom,
+        						    rooms.get(0));
+        					   break;
+        					}
+        
+        					Staff patientCNA = patient.workedWith[0];
+        					Staff patientRN = patient.workedWith[1];
+        					Staff patientDR = patient.workedWith[2];
+        
+        					System.out.println("\n>>>>>>>>>>>>>> BEGIN <<<<<<<<<<<<<<<");
+        					System.out.printf(CColor.CYAN+"Patient "+CColor.MAGENTA_UNDERLINED+"%s %s"+CColor.CYAN+" spent "+CColor.RED+"%d"+CColor.CYAN+" minutes in the hospital.%n\tThey were treated by Dr. "+CColor.MAGENTA+"%s %s "+CColor.CYAN+"(ID: %d)%n\t\tRN "+CColor.MAGENTA+"%s %s "+CColor.CYAN+" (ID: %d) and CNA "+CColor.MAGENTA+"%s %s "+CColor.CYAN+"(ID: %d)%n"+CColor.MAGENTA+"%s %s "+CColor.CYAN+"was a code "+CColor.RED+"%s."+CColor.CYAN+" They were treated as priority "+CColor.RED+"%d%n"+CColor.RESET,
+        						patient.getName()[0], patient.getName()[1], patient.TimeSpentWaiting, 
+        						patientDR.getName()[0], patientDR.getName()[1], patientDR.IDNumber(), 
+        						patientRN.getName()[0], patientRN.getName()[1], patientRN.IDNumber(),
+        						patientCNA.getName()[0], patientCNA.getName()[1], patientCNA.IDNumber(),
+        						patient.getName()[0], patient.getName()[1], patient.getCode(), patient.getPriority());
+        					System.out.println(CColor.CYAN+"\tThis is because the patient "+CColor.MAGENTA_UNDERLINED+patient.getName()[1]+CColor.CYAN+" presented the following symptoms: "+CColor.RESET);
+        					patient.symptoms.forEach(value -> System.out.println("\t\t"+CColor.RED+value+CColor.RESET));
+        					System.out.println(">>>>>>>>>>>>>> END <<<<<<<<<<<<<<<\n");
+        				    } catch (InterruptedException e) {
+        					e.printStackTrace();
+        				    }
+                		    }
+                		}).start();
+                	    Thread.sleep(1000);
+                	}
+            	} while (numPatients > 0);
+            	System.out.println(CColor.GREEN+"Finished processing. There were "+CColor.RED+totalEmergency.length()+CColor.GREEN+" emergency patients in today's simulation."+CColor.RESET);
+    
+            	} catch (NullPointerException e) {
+            	    // do nothing
+            	}
     }
-
 }
