@@ -18,6 +18,8 @@ public class Patient extends Person {
     public int TimeSpentWaiting;
     public List<Symptom> symptoms = new ArrayList<Symptom>();
     
+    public Staff[] workedWith = new Staff[3];
+    
     public Patient(String firstName, String lastName, String dateOfBirth, char code) {
 	super(firstName, lastName, dateOfBirth);
 	this.PatientID = numberOfPatients;
@@ -32,8 +34,7 @@ public class Patient extends Person {
     public void changeRoom(Room newRoom) {
 	this.TimeSpentWaiting += newRoom.getDistance();
 	this.getRoom().removeOccupant(this);
-	this.setRoom(newRoom);
-	this.getRoom().newOccupant(this);
+	newRoom.newOccupant(this);
     }
     
     public void setPriority(int newPriority) {

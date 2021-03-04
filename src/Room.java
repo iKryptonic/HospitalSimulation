@@ -40,6 +40,7 @@ public enum Room {
     
     public void newOccupant(Patient person) {
 	occupants.add(person);
+	person.setRoom(this);
 	hasPatient = true;
     }
     
@@ -65,7 +66,7 @@ public enum Room {
 	
 	if(this.getDistance()==0) {
 	    if(occupants.size()==1)
-		return occupants.get(0);
+		bestCandidate = occupants.get(0);
 	    
 	    for(Patient e : occupants) {
 		if(e.getPriority() <= currentPriority) {
@@ -75,6 +76,8 @@ public enum Room {
 		}
 	    }
 	}
+	Driver.numPatients--;
+	occupants.remove(bestCandidate);
 	return bestCandidate;
     }
     

@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,11 +24,14 @@ public class Driver {
     
     static int numPatients = 0;
 
-    public static void main(String[] args) throws InterruptedException {
+    static NameGenerator namegen;
+    
+    public static void main(String[] args) throws InterruptedException, IOException {
+	namegen = new NameGenerator("first_names.txt", "last_names.txt");
 	runSimulation(25);
     }
     
-    private static void handleNextPatient(Room room, Room waitingRoom) throws InterruptedException {
+    private static Patient handleNextPatient(Room room, Room waitingRoom) throws InterruptedException {
 	Patient patient = waitingRoom.getNextPatient();
 	
     	Staff DR = room.getStaff(0);
@@ -37,12 +41,11 @@ public class Driver {
     	CNA.admit(patient);
     	RN.assess(patient);
     	DR.treat(patient);
-    	CNA.discharge(patient);
+    	return patient;
     }
     
     private static void runSimulation(int PatientNumber) throws InterruptedException {
     	List<Room> rooms = new ArrayList<Room>();
-    	List<Patient> patients = new ArrayList<Patient>();
     	
     	for(Room currentRoom : Room.values()) {
     	    rooms.add(currentRoom); // initialize rooms with all possible rooms and random dr, rn, cna
@@ -56,17 +59,33 @@ public class Driver {
     	
     	do {
         	for(Room currentRoom : rooms) {
-        	    if(currentRoom != Room.WaitingRoom) // we are not in the waiting room
-        		new Thread(new Runnable() {
+        	    if(currentRoom != Room.WaitingRoom && currentRoom != Room.Discharged) // we are not in the waiting room
+        		new Thread(new Runnable() { // multi-threaded
         		    public void run() {
-                		try {
-				    handleNextPatient(currentRoom, 
-				    	rooms.get(0));
-				} catch (InterruptedException e) {
-				    e.printStackTrace();
-				}
+				    try {
+					Patient patient = handleNextPatient(currentRoom, 
+						rooms.get(0));
+
+					Staff patientCNA = patient.workedWith[0];
+					Staff patientRN = patient.workedWith[1];
+					Staff patientDR = patient.workedWith[2];
+
+					System.out.println("\n>>>>>>>>>>>>>> BEGIN <<<<<<<<<<<<<<<");
+					System.out.printf("Patient %s %s spent %d minutes in the hospital.%n\tThey were treated by Dr. %s %s (ID: %d)%n\t\tRN %s %s (ID: %d) and CNA %s %s (ID: %d)%n%s %s was a code %s. They were treated as priority %d%n",
+						patient.getName()[0], patient.getName()[1], patient.TimeSpentWaiting, 
+						patientDR.getName()[0], patientDR.getName()[1], patientDR.IDNumber(), 
+						patientRN.getName()[0], patientRN.getName()[1], patientRN.IDNumber(),
+						patientCNA.getName()[0], patientCNA.getName()[1], patientCNA.IDNumber(),
+						patient.getName()[0], patient.getName()[1], patient.getCode(), patient.getPriority());
+					System.out.println("\tThis is because the patient "+patient.getName()[1]+" presented the following symptoms: ");
+					patient.symptoms.forEach(value -> System.out.println("\t\t"+value));
+					System.out.println(">>>>>>>>>>>>>> END <<<<<<<<<<<<<<<\n");
+				    } catch (InterruptedException e) {
+					e.printStackTrace();
+				    }
         		    }
         		}).start();
+        	    Thread.sleep(100);
         	}
     	} while (numPatients > 0);
     }

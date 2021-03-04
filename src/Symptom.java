@@ -12,7 +12,7 @@ public enum Symptom {
     Random randomGenerator = new Random();
     
     Symptom(int severity){
-	value = randomGenerator.nextInt(severity); // any symptom is given a random severity
+	value = severity; // any symptom is given a random severity
     }
     
     public int getSeverity() {

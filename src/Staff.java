@@ -39,6 +39,8 @@ public class Staff extends Person {
     
     // patient methods
     public void assess(Patient patient) {
+	adjustEfficiency(0.02);
+	patient.workedWith[1] = this;
 	// assign the patient random symptoms
 	double totalScore = 0;
 	for(Symptom currentSymptom : Symptom.values()) {
@@ -64,31 +66,35 @@ public class Staff extends Person {
 	
     }
     public void admit(Patient patient) throws InterruptedException {
+	patient.workedWith[0] = this;
+	adjustEfficiency(0.01);
 	if(patient.getCode()=='E') // emergency patients are priority 1
 	    patient.setPriority(1);
-	patient.changeRoom(this.getRoom());
+	patient.setRoom(this.getRoom());
 	patient.TimeSpentWaiting += (int)((double)Room.admitTime * this.getEfficiency());
-	Thread.sleep(Math.max(1, new Random().nextInt(5000)));
+	//Thread.sleep(Math.max(1, new Random().nextInt(5000)));
     }
     public void treat(Patient patient) throws InterruptedException {
+	adjustEfficiency(0.05);
+	patient.workedWith[2] = this;
 	double criticalMultiplier = (patient.getCode() == 'W' ? 1.25 : patient.getCode() == 'E' ? 1.5 : 1);
 	if(patient.getCode() == 'W')
 	    criticalMultiplier+= 1-(patient.getPriority()/3); // higher priority patients take longer to treat
 	patient.TimeSpentWaiting += (int)((double)((double)Math.max(15, new Random().nextInt(55)) * criticalMultiplier) * this.getEfficiency());
-	Thread.sleep(Math.max(1, new Random().nextInt(5000)));
+	//Thread.sleep(Math.max(1, new Random().nextInt(5000)));
     }
     public void discharge(Patient patient) throws InterruptedException {
+	adjustEfficiency(0.01);
 	patient.TimeSpentWaiting += this.getRoom().getDistance();
 	//patient.changeRoom(Room.WaitingRoom);
 	patient.TimeSpentWaiting += (int)((double)Room.dischargeTime * this.getEfficiency());
-	patient.changeRoom(null);
-	Driver.numPatients--;
+	patient.changeRoom(Room.Discharged);
 	System.out.println("Patient"+patient.getPatientID()+" discharged after "+patient.TimeSpentWaiting+" minutes.");
-	Thread.sleep(Math.max(1, new Random().nextInt(5000)));
+	//Thread.sleep(Math.max(1, new Random().nextInt(5000)));
     }
     
     public static Staff random(Title title, Room room) {
 	// TODO: random name and DOB generation
-	return new Staff("Isaiah", "Smith", "07/13/2000", room, title, (double)(new Random().nextInt(100)/100));
+	return new Staff("Isaiah", "Smith", "07/13/2000", room, title, 2+(double)(new Random().nextInt(100)/100));
     }
 }
