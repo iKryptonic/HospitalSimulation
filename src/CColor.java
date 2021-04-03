@@ -80,6 +80,8 @@ public enum CColor {
 
     @Override
     public String toString() {
-        return code;
+	if(Driver.PrettyColors)
+	    return code;
+	return "";
     }
 }

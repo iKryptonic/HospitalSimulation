@@ -17,7 +17,7 @@ public class NameGenerator {
 	lastNames = readFileToMap(file2);
     }
     
-    public Map<Integer, String> readFileToMap(String file) throws IOException{
+    private Map<Integer, String> readFileToMap(String file) throws IOException{
 	Map<Integer, String> toReturn = new HashMap<Integer, String>();
 	
 	BufferedReader br = new BufferedReader(new FileReader(file));
@@ -26,6 +26,8 @@ public class NameGenerator {
 	while((line=br.readLine())!=null){
 	    toReturn.put(toReturn.size(), line);
 	}
+	
+	br.close();
 	return toReturn;
     }
     

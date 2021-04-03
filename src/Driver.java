@@ -3,29 +3,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-// what are we doing?
-/*
- * Initialize an arraylist with all the rooms
- * Waiting room array holds all patients,
- * Treatment rooms hold all doctors and 1 patient if available
- * 
- * next >
- * add n patients to the waiting rooms simultaneously
- * 
- * next > 
- * there is a loop run asynchronously on every room for the CNA to grab a patient,
- * 	* random number 0-10. 20% chance that the patient is coming in with E status.
- * 	* E status skips assessment automatically
- * The RN assesses the patient
- * The Doctor treats the patient
- * The CNA discharges the patient
- */
-
 public class Driver {
     
     static int numPatients = 0;
-
     static NameGenerator namegen;
+    static boolean PrettyColors = false;
     
     public static void main(String[] args) throws InterruptedException, IOException {
 	namegen = new NameGenerator("first_names.txt", "last_names.txt");
@@ -33,16 +15,7 @@ public class Driver {
     }
     
     private static Patient handleNextPatient(Room room, Room waitingRoom) throws InterruptedException {
-	Patient patient = waitingRoom.getNextPatient();
-	
-    	Staff DR = room.getStaff(0);
-    	Staff RN = room.getStaff(1);
-    	Staff CNA = room.getStaff(2);
-    		
-    	CNA.admit(patient);
-    	RN.assess(patient);
-    	DR.treat(patient);
-    	return patient;
+	return handleNextPatient(waitingRoom.getNextPatient(), room, waitingRoom);
     }
     
     private static Patient handleNextPatient(Patient patient, Room room, Room waitingRoom) throws InterruptedException {
@@ -79,7 +52,7 @@ public class Driver {
                 		    public void run() {
         				    try {
         					Patient patient = null;
-        					switch(new Random().nextInt(10)){
+        					switch(new Random().nextInt(4)){
         					case 0:
         					   totalEmergency.append("1");
         					   patient = handleNextPatient(Patient.random('E'), 
@@ -97,9 +70,9 @@ public class Driver {
         					Staff patientDR = patient.workedWith[2];
         
         					System.out.println("\n>>>>>>>>>>>>>> BEGIN <<<<<<<<<<<<<<<");
-        					System.out.printf(CColor.CYAN+"Patient "+CColor.MAGENTA_UNDERLINED+"%s %s"+CColor.CYAN+" spent "+CColor.RED+"%d"+CColor.CYAN+" minutes in the hospital.%n\tThey were treated by Dr. "+CColor.MAGENTA+"%s %s "+CColor.CYAN+"(ID: %d)%n\t\tRN "+CColor.MAGENTA+"%s %s "+CColor.CYAN+" (ID: %d) and CNA "+CColor.MAGENTA+"%s %s "+CColor.CYAN+"(ID: %d)%n"+CColor.MAGENTA+"%s %s "+CColor.CYAN+"was a code "+CColor.RED+"%s."+CColor.CYAN+" They were treated as priority "+CColor.RED+"%d%n"+CColor.RESET,
+        					System.out.printf(CColor.CYAN+"Patient "+CColor.MAGENTA_UNDERLINED+"%s %s"+CColor.CYAN+" spent "+CColor.RED+"%d"+CColor.CYAN+" minutes in the hospital.%n\tThey were treated by Dr. "+CColor.MAGENTA+"%s %s "+CColor.CYAN+"(ID: %d) in "+CColor.RED+"%s"+CColor.CYAN+" %n\t\tRN "+CColor.MAGENTA+"%s %s "+CColor.CYAN+" (ID: %d) and CNA "+CColor.MAGENTA+"%s %s "+CColor.CYAN+"(ID: %d)%n"+CColor.MAGENTA+"%s %s "+CColor.CYAN+"was a code "+CColor.RED+"%s."+CColor.CYAN+" They were treated as priority "+CColor.RED+"%d%n"+CColor.RESET,
         						patient.getName()[0], patient.getName()[1], patient.TimeSpentWaiting, 
-        						patientDR.getName()[0], patientDR.getName()[1], patientDR.IDNumber(), 
+        						patientDR.getName()[0], patientDR.getName()[1], patientDR.IDNumber(), patient.treatedRoom.name(), 
         						patientRN.getName()[0], patientRN.getName()[1], patientRN.IDNumber(),
         						patientCNA.getName()[0], patientCNA.getName()[1], patientCNA.IDNumber(),
         						patient.getName()[0], patient.getName()[1], patient.getCode(), patient.getPriority());

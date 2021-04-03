@@ -17,6 +17,7 @@ public class Patient extends Person {
     private int Priority;
     public int TimeSpentWaiting;
     public List<Symptom> symptoms = new ArrayList<Symptom>();
+    public Room treatedRoom;
     
     public Staff[] workedWith = new Staff[3];
     

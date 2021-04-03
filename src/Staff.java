@@ -77,6 +77,7 @@ public class Staff extends Person {
     public void treat(Patient patient) throws InterruptedException {
 	adjustEfficiency(0.05);
 	patient.workedWith[2] = this;
+	patient.treatedRoom = this.getRoom();
 	double criticalMultiplier = (patient.getCode() == 'W' ? 1.25 : patient.getCode() == 'E' ? 1.5 : 1);
 	if(patient.getCode() == 'W')
 	    criticalMultiplier+= 1-(patient.getPriority()/3); // higher priority patients take longer to treat
